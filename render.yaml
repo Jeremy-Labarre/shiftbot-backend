@@ -1,39 +1,36 @@
+# ─────────────────────────  render.yaml  ─────────────────────────
+# Commit this file to the *root* of your shiftbot-backend repo and push.
+# Render will (re)create the three resources automatically.
 # ────────────────────────────────────────────────────────────────
-#  render.yaml   – Infrastructure-as-code for Render.com
-# ────────────────────────────────────────────────────────────────
-# 1. Commit this file to the *root* of your repo.
-# 2. Push to GitHub.  Render will create / update all services.
-# 3. Adjust env-var values (e.g., secrets) in the Render dashboard
-#    after the first deploy.
-# ----------------------------------------------------------------
 
 services:
-  # ── Flask / Gunicorn web service ──────────────────────────────
+  # ── 1. Flask API (Gunicorn) ───────────────────────────────────
   - type: web
     name: shiftbot-api
     env: python
-    plan: free                    # you can upgrade later
-    region: oregon                # pick the same region for all services
+    plan: free
+    region: oregon          # keep all resources in the same region
 
     buildCommand: |
       pip install -r requirements.txt
-      # Playwright needs its browsers installed at build-time
       python -m playwright install --with-deps
 
     startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
 
-    autoDeploy: true              # redeploys on every git push
-
     envVars:
-      - key: FLASK_ENV            # enables Flask debug logging
-        value: production
-      - key: REDIS_URL            # injected from the Redis add-on below
+      # Redis URL injected from the database block below
+      - key: REDIS_URL
         fromService: shiftbot-redis:url
-      # -- add your own secrets here (MSAL client id, DB URI, etc.) --
-      # - key: SQLALCHEMY_DATABASE_URI
-      #   value: postgres://user:pass@host:5432/dbname
 
-  # ── Celery worker service ─────────────────────────────────────
+      # Example extra secrets (add what your app already expects)
+      # - key: MSAL_CLIENT_ID
+      #   value: abcdef12-....
+      # - key: FLASK_SECRET_KEY
+      #   generateValue: true
+      # - key: SQLALCHEMY_DATABASE_URI
+      #   value: sqlite:///site.db          # or a Postgres URI
+
+  # ── 2. Celery worker ──────────────────────────────────────────
   - type: worker
     name: shiftbot-celery
     env: python
@@ -49,12 +46,13 @@ services:
     envVars:
       - key: REDIS_URL
         fromService: shiftbot-redis:url
-      # duplicate any other variables your tasks need
-      # - key: SQLALCHEMY_DATABASE_URI
-      #   value: postgres://user:pass@host:5432/dbname
 
-# ── Managed Redis instance (free tier) ──────────────────────────
+      # Duplicate any other vars the tasks need
+      # - key: SQLALCHEMY_DATABASE_URI
+      #   value: sqlite:///site.db
+
+# ── 3. Managed Redis instance (message broker / cache) ──────────
 databases:
   - name: shiftbot-redis
-    ipAllowList: []               # leave empty = open to all Render services
     plan: free-redis
+    ipAllowList: []   # private to Render services
