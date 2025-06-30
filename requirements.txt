@@ -1,15 +1,22 @@
-# requirements.txt
-Flask
-Flask-SQLAlchemy
-Flask-Login
-Flask-WTF
-python-dotenv
-celery
-redis
-playwright
-sqlalchemy
-email-validator
-# Add Flask-Migrate if you plan to use it for DB schema changes
-# Flask-Migrate
-requests  # <--- ADD THIS
-msal      # <--- ADD THIS
+# -------------------- CORE --------------------
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-WTF==1.2.1
+python-dotenv==1.0.1
+
+# -------------------- TASK QUEUE & WORKER --------------------
+celery==5.3.6
+redis==5.0.4      # Celery broker / result backend
+
+# -------------------- WEB SCRAPING --------------------
+playwright==1.43.0
+requests==2.32.3   # ordinary HTTP calls
+msal==1.26.0       # Microsoft Graph auth used in your tasks
+
+# -------------------- OPTIONAL UTILITIES --------------------
+email-validator==2.1.1
+SQLAlchemy==2.0.30   # (explicit so version matches Flask-SQLAlchemy)
+
+# If you later use DB migrations, add:
+# Flask-Migrate==4.0.5
