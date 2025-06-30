@@ -1,0 +1,17 @@
+{
+  "session_data": {
+    "cookies": [
+      {
+        "name": "FAKE_COOKIE",
+        "value": "this_is_a_fake_value_from_the_app",
+        "domain": ".schedulesource.net",
+        "path": "/",
+        "expires": -1,
+        "httpOnly": true,
+        "secure": true,
+        "sameSite": "Lax"
+      }
+    ],
+    "origins": []
+  }
+}

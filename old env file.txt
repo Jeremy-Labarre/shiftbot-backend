@@ -1,0 +1,15 @@
+FLASK_SECRET_KEY=your_secret_key
+# Use forward slashes for the path
+SQLALCHEMY_DATABASE_URI=sqlite:///C:/Users/Jeremy's Dell/Documents/work/Shift_Bot_Project/Shift_Bot_Iteration3/site.db
+REDIS_URL=redis://127.0.0.1:6380/0
+#MSAL_CLIENT_ID="0b2e1a3a-6cdc-44f6-85a6-b19a5b772ed3"  Your app's client ID
+#MSAL_AUTHORITY="https://login.microsoftonline.com/consumers"  Or your tenant if not consumers
+BOT_SENDER_EMAIL="bot.sender01@outlook.com" # The email account worker will send FROM
+
+
+FLASK_SECRET_KEY=your_secret_key
+SQLALCHEMY_DATABASE_URI=sqlite:///C:/Users/Jeremy's Dell/Documents/work/Shift_Bot_Project/Shift_Bot_Iteration3/site.db
+REDIS_URL=redis://127.0.0.1:6380/0
+MSAL_CLIENT_ID="d42b099d-b400-4375-a7fa-ef132ad92de6" 
+MSAL_AUTHORITY="https://login.microsoftonline.com/common"
+BOT_SENDER_EMAIL="bot.sender01@outlook.com"

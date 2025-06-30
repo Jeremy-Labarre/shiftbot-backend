@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - ShiftBot Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+    <style>
+        .ts-wrapper .ts-control {
+            border-color: #dee2e6;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .ts-wrapper.multi .ts-control > div {
+            background: #0d6efd;
+            color: white;
+            border-radius: .25rem;
+            margin-right: 0.25rem;
+            padding: 0.1rem 0.3rem;
+        }
+
+        .ts-dropdown {
+            border-color: #dee2e6;
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+        }
+        /* Lighter card headers */
+        h2, h3 {
+            color: #007bff;
+        }
+        /* Primary color for headings */
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('preferences') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar-check-fill me-2" viewBox="0 0 16 16">
+                    <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2m-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708" />
+                </svg>
+                ShiftBot Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="navbar-text me-3 text-white-50">Logged in as: {{ current_user_email }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('register') }}">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <h2 class="display-5 mb-4">{{ title }}</h2>
+
+
+        <!-- Duo Setup Card -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header fw-bold">
+                ScheduleSource / Duo Setup
+            </div>
+            <div class="card-body">
+                {% if duo_done_status %}
+                <p class="text-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" /></svg>Duo/ScheduleSource login is configured.</p>
+                <p><small>To re-run setup (e.g., if session expired or to ensure it's fresh):</small></p>
+                {% else %}
+                <p class="text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" /></svg>Duo/ScheduleSource login setup needed.</p>
+                <p>Click below to launch a browser. You will need to manually log in and complete Duo.</p>
+                {% endif %}
+                <a href="{{ url_for('launch_browser_setup') }}" class="btn btn-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right me-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" /><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" /></svg>
+                    Launch Duo/ScheduleSource Login Setup
+                </a>
+            </div>
+        </div>
+
+        <div class="card mb-4 shadow-sm bg-light">
+            <div class="card-header fw-bold">DEBUG: Your API Key</div>
+            <div class="card-body">
+                <p>For mobile app testing, your API key is:</p>
+                <code style="word-wrap: break-word;">{{ api_key }}</code>
+            </div>
+        </div>
+
+        <!-- Continuous Shift Monitoring Card -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header fw-bold">
+                Continuous Shift Monitoring
+                <small class="text-muted">(Checks approx. every {{ QUICK_CHECK_INTERVAL_SECONDS if QUICK_CHECK_INTERVAL_SECONDS else 'N/A' }}s)</small>
+            </div>
+            <div class="card-body">
+                {% if monitoring_status %}
+                <p class="text-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity me-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.17A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" /></svg>Shift monitoring is currently <strong>ACTIVE</strong>.</p>
+                <p><small>New shifts matching preferences will be flagged. Check "Newly Detected Shifts" below (refresh page for updates).</small></p>
+                <a href="{{ url_for('stop_shift_monitoring') }}" class="btn btn-danger">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-circle-fill me-2" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.5 5A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z" /></svg>
+                    Stop Continuous Monitoring
+                </a>
+                {% else %}
+                <p class="text-warning"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-circle-fill me-2" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.5 5A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5zm3 0A.5.5 0 0 0 9 5.5v5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-5a.5.5 0 0 0-.5-.5z" /></svg>Shift monitoring is currently <strong>INACTIVE</strong>.</p>
+                {% if duo_done_status %}
+                <a href="{{ url_for('start_shift_monitoring') }}" class="btn btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle-fill me-2" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" /></svg>
+                    Start Continuous Monitoring
+                </a>
+                {% else %}
+                <p class="text-muted"><small>Please complete Duo/ScheduleSource login setup first before starting monitoring.</small></p>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <hr class="my-4">
+
+        <!-- ADD SHIFT PREFERENCE SECTION -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header fw-bold">
+                <h3 class="mb-0 h5">Add a Shift Preference to Watch</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('save_preference') }}" class="row g-3">
+                    {{ form.hidden_tag() }}
+                    <div class="col-md-12 col-lg-4 mb-3">
+                        {{ form.target_date.label(class="form-label") }}
+                        {{ form.target_date(class="form-control", id="flatpickr-dates") }}
+                        <div class="form-text">Select one or more dates, or click button below.</div>
+                        <button type="button" id="watch-all-dates-btn" class="btn btn-outline-secondary btn-sm mt-1">Set to Any Day</button>
+                        {% if form.target_date.errors %}
+                        <div class="text-danger small mt-1">{% for error in form.target_date.errors %}{{ error }}{% endfor %}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        {{ form.target_time.label(class="form-label") }}
+                        {{ form.target_time(class="form-select tomselect-time", id="target_time_select") }}
+                        <div class="form-text">Select one or more times. Leave blank for "Any Time".</div>
+                        {% if form.target_time.errors %}
+                        <div class="text-danger small mt-1">{% for error in form.target_time.errors %}{{ error }}{% endfor %}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        {{ form.target_position.label(class="form-label") }}
+                        {{ form.target_position(class="form-select tomselect-position", id="target_position_select") }}
+                        <div class="form-text">Select one or more positions. Leave blank for "Any Position".</div>
+                        {% if form.target_position.errors %}
+                        <div class="text-danger small mt-1">{% for error in form.target_position.errors %}{{ error }}{% endfor %}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-12 mt-2 text-end">
+                        {{ form.submit(class="btn btn-primary px-4 py-2") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- YOUR SAVED PREFERENCES SECTION -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0 fw-bold">Your Saved Shift Preferences</h3>
+            {% if user_configs %} <!-- Only show if there are configs to clear -->
+            <form method="POST" action="{{ url_for('clear_all_preferences') }}" onsubmit="return confirm('Are you sure? This will delete all your specific preferences and revert to watching ALL shifts.');">
+                <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stars me-1" viewBox="0 0 16 16">
+                        <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.793 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.58 5.48l-.386 1.161a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 2.309 4.32l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z" />
+                    </svg>
+                    Watch All Shifts (Clear Specific Preferences)
+                </button>
+            </form>
+            {% endif %}
+        </div>
+
+        {% if user_configs %}
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-striped table-hover table-sm align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Date(s)</th>
+                        <th scope="col">Time(s)</th>
+                        <th scope="col">Position(s)</th>
+                        <th scope="col" class="text-end">Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cfg in user_configs %}
+                    <tr>
+                        <td>{{ cfg.target_date if cfg.target_date else 'Any Day' }}</td>
+                        <td>{{ cfg.target_time if cfg.target_time else 'Any Time' }}</td>
+                        <td>{{ cfg.target_position if cfg.target_position else 'Any Position' }}</td>
+                        <td class="text-end"><small>{{ cfg.created.strftime('%Y-%m-%d %H:%M') if cfg.created else 'N/A' }}</small></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">You have not saved any shift preferences yet. Add one above to get specific alerts!</p>
+        {% endif %}
+        <hr class="my-4">
+
+        <!-- NEWLY DETECTED SHIFTS SECTION -->
+        <h3 class="mt-5 fw-bold text-danger">★ Newly Detected Shifts (Matching Preferences) ★</h3>
+        {% if newly_scraped_shifts %}
+        <p><small>These shifts were recently found and match at least one of your active preferences.</small></p>
+        <div class="table-responsive mb-4 alert alert-warning shadow-sm rounded">
+            <table class="table table-sm table-hover">
+                <thead class="table-light">
+                    <tr><th>#</th><th>Date</th><th>Time</th><th>Position</th><th>Full Details</th><th>Detected At</th></tr>
+                </thead>
+                <tbody>
+                    {% for shift in newly_scraped_shifts %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ shift.shift_date_str }}</td>
+                        <td>{{ shift.shift_time_str }}</td>
+                        <td>{{ shift.shift_position_str }}</td>
+                        <td><small>{{ shift.raw_text }}</small></td>
+                        <td><small>{{ shift.scraped_at.strftime('%Y-%m-%d %H:%M:%S UTC') if shift.scraped_at else 'N/A' }}</small></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No new shifts matching your preferences detected recently. Keep monitoring active!</p>
+        {% endif %}
+        <hr class="my-4">
+
+        <!-- ALL KNOWN SHIFTS SECTION -->
+        <h3 class="mt-5 fw-bold">All Currently Known Available Shifts</h3>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <p class="mb-0">
+                <small>
+                    Total: {{ scraped_shifts|length }} shifts. Last full scrape:
+                    {% if scraped_shifts and scraped_shifts[0].scraped_at %}{{ scraped_shifts[0].scraped_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}{% else %}N/A{% endif %}
+                </small>
+            </p>
+            <a href="{{ url_for('fetch_my_shifts') }}" class="btn btn-info btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise me-2" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z" /><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466" /></svg>
+                Perform Full Manual Scrape Now
+            </a>
+        </div>
+        {% if scraped_shifts %}
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-sm table-hover table-striped align-middle">
+                <thead class="table-light">
+                    <tr><th>#</th><th>Date</th><th>Time</th><th>Position</th><th>Full Details</th></tr>
+                </thead>
+                <tbody>
+                    {% for shift in scraped_shifts %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ shift.shift_date_str }}</td>
+                        <td>{{ shift.shift_time_str }}</td>
+                        <td>{{ shift.shift_position_str }}</td>
+                        <td><small>{{ shift.raw_text }}</small></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No shifts currently scraped. Click "Perform Full Manual Scrape Now" (ensure Duo setup is complete).</p>
+        {% endif %}
+
+    </div>
+
+    <footer class="footer mt-auto py-3 bg-dark text-white-50">
+        <div class="container text-center">
+            <span>ShiftBot Portal © {{ dt.date.today().year if dt else '2024' }}</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateInput = document.getElementById("flatpickr-dates");
+            if (dateInput) {
+                const fp = flatpickr(dateInput, {
+                    mode: "multiple", dateFormat: "m/d/Y", altInput: true,
+                    altFormat: "F j, Y", conjunction: ", ",
+                    onClose: function (selectedDates, dateStr, instance) {
+                        instance.input.value = dateStr;
+                        instance.input.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+                const watchAllDatesBtn = document.getElementById("watch-all-dates-btn");
+                if (watchAllDatesBtn) {
+                    watchAllDatesBtn.addEventListener("click", function () {
+                        fp.clear();
+                        if (dateInput.value !== "") {
+                            dateInput.value = "";
+                            dateInput.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+                }
+            }
+
+            const timeSelectElement = document.getElementById('target_time_select');
+            if (timeSelectElement) {
+                new TomSelect(timeSelectElement, { plugins: ['remove_button'], create: false, placeholder: 'Select time(s)...' });
+            }
+
+            const positionSelectElement = document.getElementById('target_position_select');
+            if (positionSelectElement) {
+                new TomSelect(positionSelectElement, { plugins: ['remove_button'], create: false, placeholder: 'Select position(s)...' });
+            }
+        });
+    </script>
+</body>
+</html>

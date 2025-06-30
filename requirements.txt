@@ -1,0 +1,15 @@
+# requirements.txt
+Flask
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+python-dotenv
+celery
+redis
+playwright
+sqlalchemy
+email-validator
+# Add Flask-Migrate if you plan to use it for DB schema changes
+# Flask-Migrate
+requests  # <--- ADD THIS
+msal      # <--- ADD THIS

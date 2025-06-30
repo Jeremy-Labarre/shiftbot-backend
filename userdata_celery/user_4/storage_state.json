@@ -1,0 +1,129 @@
+{
+  "cookies": [
+    {
+      "name": "TWUGE",
+      "value": "25062919074807.0713ea9049ab4c7eb233792d87fffa97",
+      "domain": "uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751333328,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALB",
+      "value": "ZVny8EM3hhoT+MiDYCvNs65YFSwIlvdkm0+1CQRAEwTYl4E8bu+f2QujvvHV0S0yxlkaGScaEai6OVYk6ySXdZa/YT6RxUnJA/teElpkiIzRQ6hE1v7qJEPwoOkc",
+      "domain": "uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751851729,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALBCORS",
+      "value": "ZVny8EM3hhoT+MiDYCvNs65YFSwIlvdkm0+1CQRAEwTYl4E8bu+f2QujvvHV0S0yxlkaGScaEai6OVYk6ySXdZa/YT6RxUnJA/teElpkiIzRQ6hE1v7qJEPwoOkc",
+      "domain": "uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751851729,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OAMAuthnCookie_signon.ual.com_443",
+      "value": "8ea9b7f41d4170af13f53f96171557f6284ca2e4%7EUGqGBnILV%2BsGlxQvtYBNWD%2FzE75uUx2T2WOChYytJfi58RAjS2i0zqQBvrIqvAxBiOnMgWbFP9%2Fcl19hu%2B0JETO1wRzxJVZhY2E6OhBKHreuf1%2FgquZay2pRb4%2Fl6MNDDYtSEd2J4jAPOGWJwCSRdp4oBlNAsepTpXjXTLVaUYR0BzPV6gsehSINcX7q6HrMu72lF3bMDLxOi0FSAi33LRptephTsf%2B69W0uXlWgoCy%2FGf0rk%2FJX5wN6KQ%2BKxaHr4FWCnBynVqc1asfR0%2BoC%2Fi8pwSNMSJ4FXxDFhBPCNk%2F8g6fZJbSJcRde7Sj%2BQTq8mK3ERcQq%2BcVToC3Wt9j2%2B0Gn8vW6BmfT%2FA67JPhS4Tu8jr%2FXbnCkNueHWo8D505XUjMiZmApPQYsqs9OKGsh6w%3D%3D",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "oam-dmz",
+      "value": "1158719680.23313.0000",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ORA_OSFS_SESSION",
+      "value": "id-pWWVYOuzmFQ-pS-HgM05rfLDu6tiKyaX4BYyFY4f",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OAM_JSESSIONID",
+      "value": "1Qq9Fj3FlyvD9O820eGtu9yYxZJK6E-EEPqUGnxBJojbRenG5Z45!535276437",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "JSESSIONID",
+      "value": "wOq9Fj3LfYITZYpkRf5HtYbvPIZJ2grUs0NKjdXDpaERlxPBIcbv!535276437",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OAM_ID",
+      "value": "VERSION_5~eA8aClWGA1C2qlDh98RtzA==~BQwhztF5TA/4daUgVHYh3qwv0K8iW4gUbHyyc5VJShKbXKGmjktsp3LRwRbV6nKYIO0UFZ33u0l4TrsIyPDDRXfxalSlQxeoBNxu6gA79pCRoTa/8aGpiY4IWnPKu559rx8Tx7oun91hQKMjLsjnhcAHMTISn0jntvsJtPHiylBg0ZNnEpy0aoSnOUKcexg3qp5aQrNmSdr92O8XTVJ8yFWwktzs2yZYxKHiMiDeolg1Mw4PJ4r9Y+MlpTdQMVUx2gJmQ1xVfXbXQPNNhBJFx12o02jmPUXsG9tywXyj/hnxypdLEd/Z7zlLdeltCerSrJd4VVKRSohU67zd0LrdK3c1rIU0Zm7VhRkMCspxUAV1r7JITW9Bg5S52rVg/BB/tFeWOsjafxN/EnW6QZY9BTQ/6aIEZp8HQLWRzNB1vqC5EM+y9KsYUL9yWBAzgyQ/0D69ZgN5SaeRFS3tloQmaA==",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OAM_REQ_0",
+      "value": "invalid",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OAM_REQ_1",
+      "value": "invalid",
+      "domain": "signon.ual.com",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://uge.schedulesource.net",
+      "localStorage": [
+        {
+          "name": "#empSchGrid",
+          "value": "{\"page\":1,\"pageSize\":9999999,\"aggregate\":[{\"field\":\"Hours\",\"aggregate\":\"sum\"},{\"field\":\"StnName\",\"aggregate\":\"count\"}],\"columnVisibility\":{\"CliName\":true}}"
+        },
+        {
+          "name": "session",
+          "value": "{\"MyCalendar\":{\"view\":\"month\",\"ShowScheduled\":true,\"ShowTime\":false,\"ShowSwap\":false,\"ShowLeave\":true,\"ShowAvail\":false,\"ShowEvents\":false,\"showWorkHours\":false,\"workStartTime\":\"2000-01-01T08:00:00\",\"workEndTime\":\"2000-01-01T20:00:00\"},\"Business\":{\"workWeekStart\":1},\"Schedule\":{\"view\":\"week\"}}"
+        }
+      ]
+    }
+  ]
+}

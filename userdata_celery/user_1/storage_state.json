@@ -1,0 +1,70 @@
+{
+  "cookies": [
+    {
+      "name": "TWUGE",
+      "value": "25062313592892.e36c3efbd3284faab981ac21cc55215b",
+      "domain": "uge.schedulesource.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "TWUGE",
+      "value": "25062313592892.e36c3efbd3284faab981ac21cc55215b",
+      "domain": ".uge.schedulesource.net",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALB",
+      "value": "CjVoHZukEeM4g6mUkzaX6c3D70jetuE4HdZq5pNxW0NP3SIZM6dDKsYpfC+V5kZIpjGhxMoBANwfx1zj/j3QSvOM+IPZKiRLCJR1PQR5fH3hWSkT7lt2xrafQCz3",
+      "domain": "uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751316818,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALBCORS",
+      "value": "CjVoHZukEeM4g6mUkzaX6c3D70jetuE4HdZq5pNxW0NP3SIZM6dDKsYpfC+V5kZIpjGhxMoBANwfx1zj/j3QSvOM+IPZKiRLCJR1PQR5fH3hWSkT7lt2xrafQCz3",
+      "domain": "uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751316818,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALB",
+      "value": "CjVoHZukEeM4g6mUkzaX6c3D70jetuE4HdZq5pNxW0NP3SIZM6dDKsYpfC+V5kZIpjGhxMoBANwfx1zj/j3QSvOM+IPZKiRLCJR1PQR5fH3hWSkT7lt2xrafQCz3",
+      "domain": ".uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751273618,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "AWSALBCORS",
+      "value": "CjVoHZukEeM4g6mUkzaX6c3D70jetuE4HdZq5pNxW0NP3SIZM6dDKsYpfC+V5kZIpjGhxMoBANwfx1zj/j3QSvOM+IPZKiRLCJR1PQR5fH3hWSkT7lt2xrafQCz3",
+      "domain": ".uge.schedulesource.net",
+      "path": "/",
+      "expires": 1751273618,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://uge.schedulesource.net",
+      "localStorage": []
+    }
+  ]
+}

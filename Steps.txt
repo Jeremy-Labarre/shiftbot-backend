@@ -1,0 +1,59 @@
+Please provide a comprehensive and deeply detailed explanation of my project so that Chat 2 can understand every aspect of it. In your response, include all of the following:
+
+Project Overview and Purpose
+
+Describe the project’s main objective and why it exists.
+
+Explain the problem it’s solving or the need it’s fulfilling.
+
+Summarize the intended users or audience and the value it delivers to them.
+
+Desired End Result
+
+Clearly state what a successful final version of this project looks like.
+
+List key features, functionality, and deliverables that must be included by the end.
+
+Explain any performance, usability, or quality goals that define “completed.”
+
+Work Completed So Far
+
+Enumerate each major milestone that has already been accomplished (e.g., initial research, architecture design, prototype modules, testing phases).
+
+For each milestone, describe who worked on it, what tools or technologies were used, and what was delivered (e.g., “Module A is fully implemented in Python and fully unit-tested”).
+
+Note any documentation, diagrams, or code repositories that already exist and where they’re stored.
+
+Current Status
+
+State exactly where we are right now: which components are finished, which are in progress, and which have not yet been started.
+
+Identify any blockers, unresolved questions, or dependencies that are waiting on external input.
+
+Include any recent decisions or changes in direction that affect the immediate next steps.
+
+Challenges and Considerations
+
+Highlight technical difficulties encountered so far (e.g., integration issues, performance bottlenecks, resource constraints).
+
+Explain any design trade-offs that were made and why.
+
+Mention assumptions still in place and risks that could impact future work.
+
+Next Steps and Timeline
+
+Provide a clear roadmap of tasks remaining, in priority order.
+
+For each remaining task, specify who will handle it (if known), estimated effort, and dependencies.
+
+If you have a projected timeline or deadlines, include them here.
+
+Additional Context
+
+Pull in any relevant details from our previous conversations (e.g., technology choices, stakeholder feedback, or scope changes).
+
+If there are specific documents, code links, or external resources that Chat 2 should review, list them explicitly.
+
+Write the explanation as if Chat 2 has never seen our conversations before and must learn every nuance and detail—from high-level vision down to individual modules—so that it can immediately pick up where we left off.
+
+Thank you.
