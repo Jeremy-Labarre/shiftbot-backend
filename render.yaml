@@ -11,6 +11,7 @@ services:
     region: oregon                # Pick the region closest to most users
     plan: free                    # Forever-free web instance (750 hrs / month)
     buildCommand:  pip install -r requirements.txt
+	python -m playwright install --with-deps
     startCommand: python app.py
     numInstances: 1
     autoDeploy: true              # re-deploy when you push to GitHub main
@@ -28,6 +29,7 @@ services:
     region: oregon
     plan: free                    # Shares the free-tier hour pool
     buildCommand:  pip install -r requirements.txt
+    python -m playwright install --with-deps
     startCommand: celery -A celery_init.celery_app worker --loglevel=info --pool=solo
     numInstances: 1
     autoDeploy: true
