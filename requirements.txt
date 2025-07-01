@@ -18,5 +18,6 @@ msal==1.26.0       # Microsoft Graph auth used in your tasks
 email-validator==2.1.1
 SQLAlchemy==2.0.30   # (explicit so version matches Flask-SQLAlchemy)
 
-# If you later use DB migrations, add:
-# Flask-Migrate==4.0.5
+# -------------------- PRODUCTION SERVER --------------------
+gunicorn==22.0.0
+gevent==24.2.1
