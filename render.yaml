@@ -1,24 +1,27 @@
-# A Blueprint for the ShiftBot application
-# Defines Redis, Disk, Web Service, and Worker all as services.
-
 services:
-  # 1. The Redis Add-on
+  # 1. The PostgreSQL Database
+  - type: pserv
+    name: shiftbot-db
+    plan: free
+    region: virginia
+    databaseName: shiftbot_db 
+    user: shiftbot_user
+
+  # 2. The Redis Add-on
   - type: redis
     name: shiftbot-redis
     plan: free
     region: virginia
-    
-  # 2. The Web Service (Flask API)
+    # This IP allow list allows all your other Render services to connect
+    ipAllowList:
+      - source: 0.0.0.0/0 
+
+  # 3. The Web Service (Flask API)
   - type: web
     name: shiftbot-api
     runtime: python
     plan: free
     region: virginia
-    # This section now references the disk defined below
-    disk:
-      name: shiftbot-data
-      mountPath: /var/data
-      sizeGB: 1
     buildCommand: |
       pip install -r requirements.txt
       playwright install --with-deps chromium
@@ -31,22 +34,29 @@ services:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: shiftbot-redis # Reference the redis service
+          name: shiftbot-redis
           property: connectionString
       - key: SQLALCHEMY_DATABASE_URI
-        value: sqlite:////var/data/site.db # Path uses the mounted disk
-        
-  # 3. The Background Worker (Celery)
+        fromService:
+          type: pserv
+          name: shiftbot-db
+          property: connectionString
+      # Secrets to be added in the UI
+      - key: FLASK_SECRET_KEY
+        sync: false
+      - key: MSAL_CLIENT_ID
+        sync: false
+      - key: MSAL_AUTHORITY
+        sync: false
+      - key: BOT_SENDER_EMAIL
+        sync: false
+
+  # 4. The Background Worker (Celery)
   - type: worker
     name: shiftbot-celery
     runtime: python
     plan: free
     region: virginia
-    # This section also references the same disk
-    disk:
-      name: shiftbot-data
-      mountPath: /var/data
-      sizeGB: 1
     buildCommand: |
       pip install -r requirements.txt
       playwright install --with-deps chromium
@@ -57,10 +67,13 @@ services:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: shiftbot-redis # Reference the redis service
+          name: shiftbot-redis
           property: connectionString
       - key: SQLALCHEMY_DATABASE_URI
-        value: sqlite:////var/data/site.db # Path uses the mounted disk
+        fromService:
+          type: pserv
+          name: shiftbot-db
+          property: connectionString
       # Secrets to be added in the UI
       - key: FLASK_SECRET_KEY
         sync: false
