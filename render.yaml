@@ -1,18 +1,17 @@
 services:
-  # 1. The PostgreSQL Database
+  # 1. The PostgreSQL Database - CORRECTED
   - type: pserv
     name: shiftbot-db
     plan: free
     region: virginia
-    databaseName: shiftbot_db 
-    user: shiftbot_user
+    # The 'databaseName' and 'user' keys are removed as they are not valid here.
+    # Render creates them automatically.
 
   # 2. The Redis Add-on
   - type: redis
     name: shiftbot-redis
     plan: free
     region: virginia
-    # This IP allow list allows all your other Render services to connect
     ipAllowList:
       - source: 0.0.0.0/0 
 
