@@ -1,3 +1,19 @@
+# A Blueprint for the ShiftBot application, with corrected structure
+# for disks and addons.
+
+# Top-level 'disks' definition
+disks:
+  - name: shiftbot-data # Define the disk once here
+    mountPath: /var/data
+    sizeGB: 1
+
+# Top-level 'addons' definition
+addons:
+  - name: shiftbot-redis # Define the redis addon once here
+    plan: free
+    region: virginia
+
+# Services that will use the above resources
 services:
   - type: web
     name: shiftbot-api
@@ -16,16 +32,15 @@ services:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: shiftbot-redis
+          name: shiftbot-redis # Reference the addon
           property: connectionString
-      - key: SQLALCHEMY_DATABASE_URI # This now points to the persistent disk
-        value: sqlite:////var/data/site.db
-    # This section tells Render to attach the disk we define below
-    disks:
-      - name: shiftbot-data
-        mountPath: /var/data
-        sizeGB: 1
-
+      - key: SQLALCHEMY_DATABASE_URI
+        value: sqlite:////var/data/site.db # Path uses the mounted disk
+    # This section now just references the disk defined at the top level
+    disk:
+      name: shiftbot-data
+      mountPath: /var/data
+      
   - type: worker
     name: shiftbot-celery
     runtime: python
@@ -34,7 +49,6 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       playwright install --with-deps chromium
-    # More specific start command to avoid any ambiguity
     startCommand: "celery -A celery_init.celery_app worker --loglevel=info --pool=solo"
     envVars:
       - key: PYTHON_VERSION
@@ -42,11 +56,11 @@ services:
       - key: REDIS_URL
         fromService:
           type: redis
-          name: shiftbot-redis
+          name: shiftbot-redis # Reference the addon
           property: connectionString
-      - key: SQLALCHEMY_DATABASE_URI # The worker also needs to know where the DB is
-        value: sqlite:////var/data/site.db
-      # Add your secrets here when creating the Blueprint in the UI
+      - key: SQLALCHEMY_DATABASE_URI
+        value: sqlite:////var/data/site.db # Path uses the mounted disk
+      # Secrets to be added in the UI
       - key: FLASK_SECRET_KEY
         sync: false
       - key: MSAL_CLIENT_ID
@@ -55,13 +69,7 @@ services:
         sync: false
       - key: BOT_SENDER_EMAIL
         sync: false
-    # The worker also needs access to the same disk
-    disks:
-      - name: shiftbot-data
-        mountPath: /var/data
-        sizeGB: 1
-
-addons:
-  - name: shiftbot-redis
-    plan: free
-    region: virginia
+    # This section also references the same disk
+    disk:
+      name: shiftbot-data
+      mountPath: /var/data
