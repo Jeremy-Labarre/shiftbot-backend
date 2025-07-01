@@ -18,6 +18,13 @@ services:
           type: redis
           name: shiftbot-redis
           property: connectionString
+      - key: SQLALCHEMY_DATABASE_URI # This now points to the persistent disk
+        value: sqlite:////var/data/site.db
+    # This section tells Render to attach the disk we define below
+    disks:
+      - name: shiftbot-data
+        mountPath: /var/data
+        sizeGB: 1
 
   - type: worker
     name: shiftbot-celery
@@ -27,7 +34,8 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       playwright install --with-deps chromium
-    startCommand: "celery -A tasks worker --loglevel=info --pool=solo"
+    # More specific start command to avoid any ambiguity
+    startCommand: "celery -A celery_init.celery_app worker --loglevel=info --pool=solo"
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.2
@@ -36,9 +44,10 @@ services:
           type: redis
           name: shiftbot-redis
           property: connectionString
+      - key: SQLALCHEMY_DATABASE_URI # The worker also needs to know where the DB is
+        value: sqlite:////var/data/site.db
+      # Add your secrets here when creating the Blueprint in the UI
       - key: FLASK_SECRET_KEY
-        sync: false
-      - key: SQLALCHEMY_DATABASE_URI
         sync: false
       - key: MSAL_CLIENT_ID
         sync: false
@@ -46,6 +55,11 @@ services:
         sync: false
       - key: BOT_SENDER_EMAIL
         sync: false
+    # The worker also needs access to the same disk
+    disks:
+      - name: shiftbot-data
+        mountPath: /var/data
+        sizeGB: 1
 
 addons:
   - name: shiftbot-redis
