@@ -1,29 +1,26 @@
-# A Blueprint for the ShiftBot application
 services:
-  # ──────────────────────────────────────────────────────────────
   - type: web
-    name: shiftbot-api                # public HTTP endpoint
+    name: shiftbot-api
     runtime: python
     plan: free
-    region: virginia                   
+    region: virginia
     buildCommand: |
       pip install -r requirements.txt
       playwright install --with-deps chromium
-    startCommand: "gunicorn -w 4 app:app" # Using a standard Gunicorn command
+    startCommand: "gunicorn -w 4 app:app"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.12.2 # Explicitly set Python version
+        value: 3.12.2
       - key: FLASK_ENV
         value: production
-      - key: REDIS_URL                 # Render injects this automatically
+      - key: REDIS_URL
         fromService:
           type: redis
           name: shiftbot-redis
           property: connectionString
 
-  # ──────────────────────────────────────────────────────────────
   - type: worker
-    name: shiftbot-celery             # background jobs
+    name: shiftbot-celery
     runtime: python
     plan: free
     region: virginia
@@ -33,25 +30,23 @@ services:
     startCommand: "celery -A tasks worker --loglevel=info --pool=solo"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.12.2 # Match the web service version
+        value: 3.12.2
       - key: REDIS_URL
         fromService:
           type: redis
           name: shiftbot-redis
           property: connectionString
-      # --- IMPORTANT! ADD YOUR OTHER ENV VARS HERE ---
       - key: FLASK_SECRET_KEY
-        sync: false # Keep this secret
+        sync: false
       - key: SQLALCHEMY_DATABASE_URI
-        sync: false # Keep this secret
+        sync: false
       - key: MSAL_CLIENT_ID
-        sync: false # Keep this secret
+        sync: false
       - key: MSAL_AUTHORITY
-        sync: false 
+        sync: false
       - key: BOT_SENDER_EMAIL
-        sync: false 
+        sync: false
 
-# --- CORRECTED SECTION FOR REDIS ---
 addons:
   - name: shiftbot-redis
     plan: free
