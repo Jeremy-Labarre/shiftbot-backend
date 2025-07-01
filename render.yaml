@@ -1,26 +1,24 @@
-# render.yaml  ── defines ALL Render resources
+# A Blueprint for the ShiftBot application
 services:
   # ──────────────────────────────────────────────────────────────
   - type: web
     name: shiftbot-api                # public HTTP endpoint
     runtime: python
     plan: free
-    region: virginia                   # or virginia, frankfurt, etc.
-
+    region: virginia                   
     buildCommand: |
       pip install -r requirements.txt
-      playwright install --with-deps   # Playwright headless deps
-
-    startCommand: |
-      gunicorn -k gevent -w 1 -b 0.0.0.0:$PORT app:app
-
+      playwright install --with-deps chromium
+    startCommand: "gunicorn -w 4 app:app" # Using a standard Gunicorn command
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.2 # Explicitly set Python version
       - key: FLASK_ENV
         value: production
       - key: REDIS_URL                 # Render injects this automatically
         fromService:
-          name: shiftbot-redis
           type: redis
+          name: shiftbot-redis
           property: connectionString
 
   # ──────────────────────────────────────────────────────────────
@@ -29,24 +27,32 @@ services:
     runtime: python
     plan: free
     region: virginia
-
     buildCommand: |
       pip install -r requirements.txt
-      playwright install --with-deps
-
-    startCommand: |
-      celery -A celery_init.celery_app worker --loglevel=info --pool=solo
-
+      playwright install --with-deps chromium
+    startCommand: "celery -A tasks worker --loglevel=info --pool=solo"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.2 # Match the web service version
       - key: REDIS_URL
         fromService:
-          name: shiftbot-redis
           type: redis
+          name: shiftbot-redis
           property: connectionString
+      # --- IMPORTANT! ADD YOUR OTHER ENV VARS HERE ---
+      - key: FLASK_SECRET_KEY
+        sync: false # Keep this secret
+      - key: SQLALCHEMY_DATABASE_URI
+        sync: false # Keep this secret
+      - key: MSAL_CLIENT_ID
+        sync: false # Keep this secret
+      - key: MSAL_AUTHORITY
+        sync: false 
+      - key: BOT_SENDER_EMAIL
+        sync: false 
 
-databases:
-  # ──────────────────────────────────────────────────────────────
+# --- CORRECTED SECTION FOR REDIS ---
+addons:
   - name: shiftbot-redis
-    type: redis
     plan: free
     region: virginia
