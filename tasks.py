@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 from playwright.async_api import Page, Frame, async_playwright, TimeoutError as PlaywrightTimeoutError, Error as PlaywrightError
 from celery.utils.log import get_task_logger
+from celery.schedules import crontab
 import redis
 import requests
 import msal
@@ -328,6 +329,52 @@ def _perform_interactive_login_sync_wrapper(user_id_for_path, user_email_for_log
         return loop.run_until_complete(_actual_playwright_logic_async())
     finally: logger.info(f"Asyncio wrapper for DUO LOGIN of {user_email_for_log} finished.")
 
+# ==================== ADD THE FOLLOWING CODE BLOCK HERE ====================
+# This is the Celery Beat scheduler configuration.
+# It tells Celery to run a specific task on a schedule.
+
+@celery_app.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+    """
+    Sets up the periodic tasks for Celery Beat.
+    This function is called once, when the Celery app is configured.
+    """
+    logger.info("--- Setting up periodic tasks for all active users ---")
+    
+    # We want to use the main 'quick_check_shifts_for_user' task as our periodic check.
+    # It's more efficient than the full scrape.
+    # We will schedule it to run every 90 seconds. You can change this value.
+    sender.add_periodic_task(
+        90.0,  # The interval in seconds. e.g., 90.0 for every 90 seconds.
+        trigger_all_active_user_checks.s(), # The task to run (we will define this next)
+        name='trigger shift checks for all active users'
+    )
+
+@celery_app.task
+def trigger_all_active_user_checks():
+    """
+    This is a "meta-task" that finds all active users and creates
+    an individual check task for each one.
+    """
+    db_session = SessionLocal()
+    try:
+        active_users = db_session.query(User).filter_by(monitoring_active=True, duo_done=True).all()
+        if not active_users:
+            logger.info("PERIODIC_TRIGGER: No active users to check.")
+            return
+
+        logger.info(f"PERIODIC_TRIGGER: Found {len(active_users)} active users. Queueing individual checks.")
+        for user in active_users:
+            # For each active user, we queue their individual quick_check task.
+            quick_check_shifts_for_user.delay(user.id)
+            logger.info(f"  - Queued quick_check for {user.email} (ID: {user.id})")
+            
+    except Exception as e:
+        logger.error(f"PERIODIC_TRIGGER: Error querying for active users: {e}", exc_info=True)
+    finally:
+        db_session.close()
+
+# ==================== END OF THE NEW CODE BLOCK ====================
 
 @celery_app.task(name="tasks.open_login_browser_for_duo_setup", bind=True)
 def open_login_browser_for_duo_setup(self, user_id: int): # ... (No changes from your latest version, with email call) ...
