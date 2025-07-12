@@ -293,7 +293,7 @@ def _perform_interactive_login_sync_wrapper(user_id_for_path, user_email_for_log
         user_specific_data_dir=os.path.join(USER_DATA_ROOT_DIR,f"user_{user_id_for_path}");os.makedirs(user_specific_data_dir,exist_ok=True);storage_state_file_path=os.path.join(user_specific_data_dir,STORAGE_STATE_FILENAME);login_was_successful=False;browser=None;context=None
         logger.info(f"Attempting Playwright launch for {user_email_for_log}. Storage: {storage_state_file_path}")
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=False, args=['--start-maximized'], slow_mo=150)
+            browser = await p.chromium.launch(headless=True, args=['--no-sandbox'], slow_mo=0)
             context = await browser.new_context(accept_downloads=True, viewport={"width": 1280, "height": 960})
             page = await context.new_page()
             try:
@@ -450,7 +450,7 @@ def _quick_check_shifts_sync_wrapper(user_id_for_path, user_email_for_log): # ..
         browser = None; context = None
         async with async_playwright() as p:
             try:
-                browser = await p.chromium.launch(headless=False, slow_mo=50)
+                browser = await p.chromium.launch(headless=True, slow_mo=0)
                 context = await browser.new_context(storage_state=storage_state_file_path)
                 page = await context.new_page()
                 await page.goto(SWAP_URL, timeout=35000, wait_until="domcontentloaded")
