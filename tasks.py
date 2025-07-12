@@ -32,7 +32,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=ENGINE)
 
 # --- Redis for Cache ---
 try:
-    redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://127.0.0.1:6380/0"), decode_responses=True)
+    redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0"), decode_responses=True)
     redis_client.ping(); logger.info("Successfully connected to Redis for caching.")
 except Exception as e_redis: logger.error(f"Could not connect to Redis: {e_redis}."); redis_client = None
 
